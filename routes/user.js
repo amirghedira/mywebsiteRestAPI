@@ -1,25 +1,17 @@
-const express = require('express')
+const express = require('express');
 const router = express.Router();
-const bodyParser = require('body-parser');
+const User = require('../models/User');
+const bodyparser = require('body-parser');
 const multer = require('multer');
-const fs = require('fs');
-const path = require('path')
-const Project = require('../models/Project')
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const checkAuth = require('../middlelwares/checkAuth')
 const objects = require('../middlelwares/Multeruploads')
 const dataUri = objects.dataUri
 const objects2 = require('../middlelwares/cloudinary')
-const checkAuth = require('../middlelwares/checkAuth')
 const uploader = objects2.uploader;
-
-
-const storage2 = multer.memoryStorage();
-const multerUploads = multer({ storage2 }).single('image');
-const storage3 = multer.memoryStorage();
-const multerUploads2 = multer({ storage3 }).array('images');
-
-router.use(bodyParser.urlencoded({ extended: true }));
-router.use(bodyParser.json());
-
+router.use(bodyparser.urlencoded({ extended: true }));
+router.use(bodyparser.json());
 router.all("/*", function (req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH');
@@ -27,45 +19,15 @@ router.all("/*", function (req, res, next) {
     next();
 });
 
-router.post('/uploads', multerUploads2, async (req, res) => {
-    if (req.files) {
-        const urls = []
-        const files = req.files;
-        for (const file of files) {
-            const newfile = dataUri(file).content;
-            await uploader.upload(newfile)
-                .then((result) => {
-                    urls.push(result.url)
-                })
-                .catch((err) => res.status(400).json({
-                    messge: 'someting went wrong while processing your request',
-                    data: {
-                        err
-                    }
-                }))
-        }
-        res.status(200).json({
-            data: {
-                urls
-            }
-        })
-    } else {
-        res.status(400).json({
-            error: 'no files entered'
-        })
-    }
-});
+const storage2 = multer.memoryStorage();
+const multerUploads = multer({ storage2 }).single('profileimage');
+
 router.post('/upload', multerUploads, (req, res) => {
     if (req.file) {
         const file = dataUri(req.file).content;
         uploader.upload(file).then((result) => {
             const image = result.url;
-            res.status(200).json({
-                messge: 'Your image has been uploded successfully to cloudinary',
-                data: {
-                    image
-                }
-            })
+            res.status(200).json(image)
         }).catch((err) => res.status(400).json({
             messge: 'someting went wrong while processing your request',
             data: {
@@ -74,121 +36,223 @@ router.post('/upload', multerUploads, (req, res) => {
         }))
     }
 });
+
+router.post('/', checkAuth, (req, res, next) => {
+    bcrypt.hash(req.body.password, 10)
+        .then(hash => {
+            const user = new User({
+                username: req.body.username,
+                password: hash,
+                name: req.body.name,
+                profileimage: req.body.profileimage,
+                backgroundimage: req.body.backgroundimage,
+                title: req.body.title,
+                aboutme: req.body.aboutme,
+                birthday: req.body.birthday,
+                interest: req.body.interest,
+                email: req.body.email,
+                skype: req.body.skype,
+                facebook: req.body.facebook,
+                linkedin: req.body.linkedin,
+                Phone: req.body.Phone,
+                images: req.body.imagesurl
+
+            })
+            user.save()
+                .then(result => {
+                    res.status(202).json("done")
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        })
+        .catch(err => { console.log(err) })
+
+
+});
+
 router.get('/', (req, res, next) => {
-    Project.find()
+    User.findOne()
+        .select('-__v -_id')
         .exec()
         .then(result => {
-            res.status(200).json({
-                result
+            res.status(202).json(result)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+
+})
+// router.delete('/:id', (req, res, next) => {
+//     User.remove({
+//         _id: req.params.id
+//     })
+//         .exec()
+//         .then(result => {
+//             res.status(200).json(result)
+//         })
+//         .catch(err => {
+//             console.log(err)
+//         })
+// })
+router.patch('/', checkAuth, (req, res, next) => {
+    let ops = {};
+    for (let obj of req.body) {
+        ops[obj.propName] = obj.value
+    }
+
+    User.updateOne({ _id: "5e7d0ff83edb850abce0e4bc" }, { $set: ops })
+        .exec()
+        .then(result => {
+            res.status(200).json(result)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+})
+router.patch('/updatepassword', checkAuth, (req, res, next) => {
+    User.findOne({ username: req.body.username })
+        .select('password')
+        .exec()
+        .then(user => {
+            bcrypt.compare(req.body.oldpassword, user.password)
+                .then(result => {
+                    if (result) {
+                        bcrypt.hash(req.body.password, 5)
+                            .then(hash => {
+
+                                User.updateOne({ _id: "5e7d0ff83edb850abce0e4bc" }, { $set: { password: hash } })
+                                    .exec()
+                                    .then(response => {
+                                        res.status(200).json({ message: 'Password successfully updated' })
+                                    })
+                                    .catch(err => {
+                                        res.status(500).json({ qqq: err })
+                                    })
+                            })
+                            .catch(err => {
+                                res.status(400).json({ error: err })
+                            })
+                    } else
+                        res.status(409).json({ message: 'Actual password is wrong' })
+                })
+                .catch(err => {
+                    res.status(500).json({ error: err })
+                })
+        })
+        .catch(err => {
+            res.status(500).json({ error: "on users found" })
+        })
+})
+router.post('/login', (req, res, next) => {
+
+    User.findOne({ username: req.body.username })
+        .exec()
+        .then(user => {
+            if (user) {
+                const password = user.password
+                bcrypt.compare(req.body.password, password)
+                    .then(passresult => {
+                        if (passresult) {
+
+                            const token = jwt.sign(
+                                {
+                                    username: user.username,
+                                    userid: user._id
+                                }, "secretcode", {
+                                expiresIn: "1h"
+                            })
+                            console.log(token)
+                            res.status(200).json({ message: 'You are successfully logged in', token: token })
+                        }
+
+                        else
+                            res.status(201).json({ message: 'Wrong password, Try again!' })
+                    })
+                    .catch(err => {
+                        res.status(404).json({
+                            error: err
+                        })
+                    })
+            } else {
+
+                res.status(202).json({
+                    message: 'Aucun utilisateur avec se nom'
+                })
+            }
+
+        })
+        .catch(err => {
+            res.status(404).json({
+                error: err
             })
         })
-        .catch(err => {
-            res.status(500).json({ err })
-        })
 })
-router.get('/:id', (req, res, next) => {
-    Project.find({ id: req.params.id }, {})
-
-        .exec()
-        .then(result => {
-            if (result.length > 0)
-                res.status(200).json({ result })
-            else
-                res.status(404).json({ result })
-        })
-        .catch(err => {
-            res.status(500).json({ err })
-        })
-})
-router.post('/', checkAuth, (req, res, next) => {
-    const product = new Project({
-        id: req.body.id,
-        name: req.body.name,
-        started: req.body.started,
-        date: req.body.date,
-        overview: req.body.overview,
-        whatlearned: req.body.whatlearned,
-        technologie: req.body.technologie,
-        commentsCount: 0,
-        gitViewers: 0,
-        downloadcount: 0,
-        status: req.body.status,
-        summary: req.body.summary,
-        platform: req.body.platform,
-        features: req.body.features,
-        github: req.body.github,
-        filelink: req.body.filelink,
-        imagesurl: [...req.body.imagesurl],
-        comments: []
-    })
-    product.save()
-        .then(result => {
-            res.status(200).json('done')
-        })
-        .catch(err => {
-            res.status(400).json({ error: err })
-        })
-})
-router.patch('/postcomment', (req, res, next) => {
-    Project.updateMany({ id: req.body.id }, { $push: { Comments: req.body.comment }, $set: { commentsCount: req.body.commentsCount } })
-        .exec()
-        .then(result => {
-            res.status(200).json(result)
-        })
-        .catch(err => {
+router.patch('/updateprofileimg', checkAuth, (req, res, next) => {
+    uploader.destroy(req.body.oldimagelink, (result, err) => {
+        if (err)
             console.log(err)
-        })
-})
-router.patch('/downloadcount/:id', (req, res, next) => {
-    Project.updateOne({ id: req.params.id }, { $set: { downloadcount: req.body.downloadcount } })
-        .exec()
-        .then(result => {
-            res.status(200).json(result)
-        })
-        .catch(err => {
-            console.log(err)
-        })
-})
-router.patch('/gitviewers/:id', (req, res, next) => {
-    Project.updateOne({ id: req.params.id }, { $set: { gitViewers: req.body.gitviewers } })
-        .exec()
-        .then(result => {
-            res.status(200).json(result)
-        })
-        .catch(err => {
-            console.log(err)
-        })
-})
-router.patch('/commentdel/:id', checkAuth, (req, res, next) => {
-    Project.updateMany({ id: req.params.id }, { $set: { Comments: req.body.Comments, commentsCount: req.body.commentsCount } })
-        .exec()
-        .then(result => {
-            res.status(200).json(result)
-        })
-        .catch(err => {
-            console.log(err)
-        })
-})
-router.patch('/deleteproject/:id/', checkAuth, (req, res, next) => {
-
-    req.body.files.forEach(element => {
-        uploader.destroy(element.split('/')[7].split('.')[0], (err) => {
-        });
     });
-    Project.deleteOne({ id: req.params.id })
+    User.updateOne({ _id: "5e7d0ff83edb850abce0e4bc" }, { $set: { profileimage: req.body.newimagelink } })
         .exec()
         .then(result => {
             res.status(200).json(result)
         })
         .catch(err => {
-            res.status(404).json(err)
+            res.status(400).json(err)
+            console.log(err)
         })
-
 })
-router.patch('/:id', checkAuth, (req, res, next) => {
-    let ops = {};
-    ops[req.body.propName] = req.body.value
-    Project.updateOne({ id: req.params.id }, { $set: ops })
+router.patch('/updatebgimage', checkAuth, (req, res, next) => {
+    uploader.destroy(req.body.oldimagelink, (result, err) => {
+        if (err)
+            console.log(err)
+    });
+    User.updateOne({ _id: "5e7d0ff83edb850abce0e4bc" }, { $set: { backgroundimage: req.body.newimagelink } })
+        .exec()
+        .then(result => {
+            res.status(200).json(result)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+})
+router.patch('/deleteimage', checkAuth, (req, res) => {
+    uploader.destroy(req.body.imagelink, (result, err) => {
+        if (err)
+            console.log(err)
+    });
+    User.updateOne({ _id: "5e7d0ff83edb850abce0e4bc" }, { images: req.body.images })
+        .exec()
+        .then(result => {
+            res.status(200).json(result)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+})
+router.patch('/uploadimage', checkAuth, (req, res, next) => {
+    User.updateOne({ _id: "5e7d0ff83edb850abce0e4bc" }, { $push: { images: req.body.newimagelink } })
+        .exec()
+        .then(result => {
+            res.status(200).json(result)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+})
+router.patch('/postnews', checkAuth, (req, res, next) => {
+    User.updateOne({ _id: "5e7d0ff83edb850abce0e4bc" }, { $push: { news: req.body.news } })
+        .exec()
+        .then(result => {
+            res.status(200).json(result)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+})
+router.patch('/changenews', checkAuth, (req, res, next) => {
+    User.updateOne({ _id: "5e7d0ff83edb850abce0e4bc" }, { $set: { news: req.body.news } })
         .exec()
         .then(result => {
             res.status(200).json(result)

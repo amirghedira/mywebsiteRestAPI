@@ -117,7 +117,7 @@ router.post('/', checkAuth, (req, res, next) => {
         platform: req.body.platform,
         features: req.body.features,
         github: req.body.github,
-        filename: req.body.filename,
+        filelink: req.body.filelink,
         imagesurl: [...req.body.imagesurl],
         comments: []
     })

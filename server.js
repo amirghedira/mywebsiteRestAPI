@@ -12,4 +12,4 @@ server.use('/project', (projectRoutes))
 server.use('/user', userRoutes)
 
 
-server.listen(process.env.PORT || 9000)
+server.listen(process.env.PORT || 5000)
