@@ -16,7 +16,7 @@ const ProjectSchema = mongoose.Schema({
     platform: { type: String, require: true },
     features: { type: String, require: true },
     github: { type: String, require: true },
-    filename: { type: String, require: true },
+    filelink: { type: String, require: true },
     imagesurl: [],
     Comments: []
 
