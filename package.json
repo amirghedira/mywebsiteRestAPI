@@ -6,12 +6,9 @@
   "homepage": "http://www.amir-ghedira.com/",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "client-install": "npm install --prefix client",
     "start": "node server.js",
     "server": "nodemon server.js",
-    "client": "npm start --prefix client",
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
+    "dev": "concurrently \"npm run server\""
   },
   "keywords": [],
   "author": "",
@@ -29,5 +26,8 @@
     "multer-storage-cloudinary": "^2.2.1",
     "node-sass": "^4.13.1",
     "nodemon": "^2.0.2"
+  },
+  "engines": {
+    "node": "12.14.0"
   }
 }
