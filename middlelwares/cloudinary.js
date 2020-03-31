@@ -6,9 +6,9 @@ const uploader = cloudinary.uploader
 dotenv.config();
 const cloudinaryConfig =
     cloudinary.config({
-        cloud_name: "hojbdhnz4",
-        api_key: "715639388368954",
-        api_secret: "ozpx4Mamw0hXO28kikNfYnqOXMs"
+        cloud_name: "hoz1jpmp7",
+        api_key: "287757447646335",
+        api_secret: "1jgYtcyaC2soXm0yNOw7gw3lFKU"
     });
 exports.cloudinaryConfig = cloudinaryConfig;
 exports.uploader = uploader;

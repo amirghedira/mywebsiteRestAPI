@@ -36,44 +36,9 @@ router.post('/upload', multerUploads, (req, res) => {
         }))
     }
 });
-
-router.post('/', checkAuth, (req, res, next) => {
-    bcrypt.hash(req.body.password, 10)
-        .then(hash => {
-            const user = new User({
-                username: req.body.username,
-                password: hash,
-                name: req.body.name,
-                profileimage: req.body.profileimage,
-                backgroundimage: req.body.backgroundimage,
-                title: req.body.title,
-                aboutme: req.body.aboutme,
-                birthday: req.body.birthday,
-                interest: req.body.interest,
-                email: req.body.email,
-                skype: req.body.skype,
-                facebook: req.body.facebook,
-                linkedin: req.body.linkedin,
-                Phone: req.body.Phone,
-                images: req.body.imagesurl
-
-            })
-            user.save()
-                .then(result => {
-                    res.status(202).json("done")
-                })
-                .catch(err => {
-                    console.log(err)
-                })
-        })
-        .catch(err => { console.log(err) })
-
-
-});
-
 router.get('/', (req, res, next) => {
     User.findOne()
-        .select('-__v -_id')
+        .select('-__v ')
         .exec()
         .then(result => {
             res.status(202).json(result)
@@ -83,25 +48,14 @@ router.get('/', (req, res, next) => {
         })
 
 })
-// router.delete('/:id', (req, res, next) => {
-//     User.remove({
-//         _id: req.params.id
-//     })
-//         .exec()
-//         .then(result => {
-//             res.status(200).json(result)
-//         })
-//         .catch(err => {
-//             console.log(err)
-//         })
-// })
+
 router.patch('/', checkAuth, (req, res, next) => {
     let ops = {};
     for (let obj of req.body) {
         ops[obj.propName] = obj.value
     }
 
-    User.updateOne({ _id: "5e7d0ff83edb850abce0e4bc" }, { $set: ops })
+    User.updateOne({ _id: "5e82bb24592a39142b9725f1" }, { $set: ops })
         .exec()
         .then(result => {
             res.status(200).json(result)
@@ -121,7 +75,7 @@ router.patch('/updatepassword', checkAuth, (req, res, next) => {
                         bcrypt.hash(req.body.password, 5)
                             .then(hash => {
 
-                                User.updateOne({ _id: "5e7d0ff83edb850abce0e4bc" }, { $set: { password: hash } })
+                                User.updateOne({ _id: "5e82bb24592a39142b9725f1" }, { $set: { password: hash } })
                                     .exec()
                                     .then(response => {
                                         res.status(200).json({ message: 'Password successfully updated' })
@@ -193,7 +147,7 @@ router.patch('/updateprofileimg', checkAuth, (req, res, next) => {
         if (err)
             console.log(err)
     });
-    User.updateOne({ _id: "5e7d0ff83edb850abce0e4bc" }, { $set: { profileimage: req.body.newimagelink } })
+    User.updateOne({ _id: "5e82bb24592a39142b9725f1" }, { $set: { profileimage: req.body.newimagelink } })
         .exec()
         .then(result => {
             res.status(200).json(result)
@@ -208,7 +162,7 @@ router.patch('/updatebgimage', checkAuth, (req, res, next) => {
         if (err)
             console.log(err)
     });
-    User.updateOne({ _id: "5e7d0ff83edb850abce0e4bc" }, { $set: { backgroundimage: req.body.newimagelink } })
+    User.updateOne({ _id: "5e82bb24592a39142b9725f1" }, { $set: { backgroundimage: req.body.newimagelink } })
         .exec()
         .then(result => {
             res.status(200).json(result)
@@ -222,7 +176,7 @@ router.patch('/deleteimage', checkAuth, (req, res) => {
         if (err)
             console.log(err)
     });
-    User.updateOne({ _id: "5e7d0ff83edb850abce0e4bc" }, { images: req.body.images })
+    User.updateOne({ _id: "5e82bb24592a39142b9725f1" }, { images: req.body.images })
         .exec()
         .then(result => {
             res.status(200).json(result)
@@ -232,7 +186,7 @@ router.patch('/deleteimage', checkAuth, (req, res) => {
         })
 })
 router.patch('/uploadimage', checkAuth, (req, res, next) => {
-    User.updateOne({ _id: "5e7d0ff83edb850abce0e4bc" }, { $push: { images: req.body.newimagelink } })
+    User.updateOne({ _id: "5e82bb24592a39142b9725f1" }, { $push: { images: req.body.newimagelink } })
         .exec()
         .then(result => {
             res.status(200).json(result)
@@ -242,7 +196,7 @@ router.patch('/uploadimage', checkAuth, (req, res, next) => {
         })
 })
 router.patch('/postnews', checkAuth, (req, res, next) => {
-    User.updateOne({ _id: "5e7d0ff83edb850abce0e4bc" }, { $push: { news: req.body.news } })
+    User.updateOne({ _id: "5e82bb24592a39142b9725f1" }, { $push: { news: req.body.news } })
         .exec()
         .then(result => {
             res.status(200).json(result)
@@ -252,7 +206,7 @@ router.patch('/postnews', checkAuth, (req, res, next) => {
         })
 })
 router.patch('/changenews', checkAuth, (req, res, next) => {
-    User.updateOne({ _id: "5e7d0ff83edb850abce0e4bc" }, { $set: { news: req.body.news } })
+    User.updateOne({ _id: "5e82bb24592a39142b9725f1" }, { $set: { news: req.body.news } })
         .exec()
         .then(result => {
             res.status(200).json(result)
