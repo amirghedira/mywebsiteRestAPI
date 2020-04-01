@@ -151,9 +151,7 @@ router.post('/login', (req, res, next) => {
                                 {
                                     username: user.username,
                                     userid: user._id
-                                }, process.env.JWT_SECRET_KEY, {
-                                expiresIn: "1h"
-                            })
+                                }, process.env.JWT_SECRET_KEY)
                             res.status(200).json({ message: 'You are successfully logged in', token: token })
                         }
 
