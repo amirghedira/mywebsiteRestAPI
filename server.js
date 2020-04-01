@@ -11,13 +11,5 @@ mongosse.connect(process.env.MONGO_ATLAS_INFO, {
 })
 server.use('/project', (projectRoutes))
 server.use('/user', userRoutes)
-if (process.env.NODE_ENV === 'production') {
-
-    server.use(express.static('client/build'));
-    server.get('*', (req, res) => {
-        res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
-    });
-}
-
 
 server.listen(process.env.PORT || 5000)
