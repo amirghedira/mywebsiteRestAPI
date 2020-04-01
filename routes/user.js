@@ -113,7 +113,7 @@ router.post('/login', (req, res, next) => {
                                 {
                                     username: user.username,
                                     userid: user._id
-                                }, "secretcode")
+                                }, process.env.JWT_SECRET_KEY)
                             console.log(token)
                             res.status(200).json({ message: 'You are successfully logged in', token: token })
                         }

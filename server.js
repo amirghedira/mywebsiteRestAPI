@@ -5,7 +5,7 @@ const path = require('path');
 const projectRoutes = require('./routes/project');
 const userRoutes = require('./routes/user')
 
-mongosse.connect("mongoinfo", {
+mongosse.connect(process.env.MONGO_PASSWORD, {
     useUnifiedTopology: true,
     useNewUrlParser: true
 })
