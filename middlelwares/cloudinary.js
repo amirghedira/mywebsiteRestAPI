@@ -1,9 +1,6 @@
 const cloudinary = require('cloudinary');
-const dotenv = require('dotenv')
-const config = cloudinary.config;
 const uploader = cloudinary.uploader
 
-dotenv.config();
 const cloudinaryConfig =
     cloudinary.config({
         cloud_name: process.env.CLOUD_NAME,
