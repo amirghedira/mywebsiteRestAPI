@@ -36,6 +36,44 @@ router.post('/upload', multerUploads, (req, res) => {
         }))
     }
 });
+
+router.post('/', (req, res, next) => {
+    bcrypt.hash(req.body.password, 10)
+        .then(hash => {
+            const user = new User({
+                username: req.body.username,
+                password: hash,
+                name: req.body.name,
+                profileimage: req.body.profileimage,
+                backgroundimage: req.body.backgroundimage,
+                gender: req.body.gender,
+                title: req.body.title,
+                aboutme: req.body.aboutme,
+                birthday: req.body.birthday,
+                interest: req.body.interest,
+                email: req.body.email,
+                skype: req.body.skype,
+                facebook: req.body.facebook,
+                github: req.body.github,
+                linkedin: req.body.linkedin,
+                Phone: req.body.Phone,
+                images: req.body.imagesurl
+
+
+            })
+            user.save()
+                .then(result => {
+                    res.status(202).json("done")
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        })
+        .catch(err => { console.log(err) })
+
+
+});
+
 router.get('/', (req, res, next) => {
     User.findOne()
         .select('-__v ')
@@ -113,8 +151,9 @@ router.post('/login', (req, res, next) => {
                                 {
                                     username: user.username,
                                     userid: user._id
-                                }, JWT_SECRET_KEY)
-                            console.log(token)
+                                }, process.env.JWT_SECRET_KEY, {
+                                expiresIn: "1h"
+                            })
                             res.status(200).json({ message: 'You are successfully logged in', token: token })
                         }
 
