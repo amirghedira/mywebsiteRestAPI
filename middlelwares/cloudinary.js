@@ -6,9 +6,9 @@ const uploader = cloudinary.uploader
 dotenv.config();
 const cloudinaryConfig =
     cloudinary.config({
-        cloud_name: process.env.CLOUD_NAME,
-        api_key: process.env.API_KEY,
-        api_secret: process.env.API_SECRET
+        cloud_name: "hojbdhnz4",
+        api_key: "715639388368954",
+        api_secret: "ozpx4Mamw0hXO28kikNfYnqOXMs"
     });
 exports.cloudinaryConfig = cloudinaryConfig;
 exports.uploader = uploader;
