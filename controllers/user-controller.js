@@ -1,7 +1,7 @@
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-
+const mongoose = require('mongoose')
 exports.addUser = (req, res, next) => {
     bcrypt.hash(req.body.password, 10)
         .then(hash => {
@@ -41,10 +41,10 @@ exports.addUser = (req, res, next) => {
 
 exports.getUser = (req, res, next) => {
     User.findOne()
-        .select('-__v ')
+        .select('-__v -password')
         .exec()
-        .then(result => {
-            res.status(202).json(result)
+        .then(User => {
+            res.status(202).json(User)
         })
         .catch(err => {
             console.log(err)
@@ -118,7 +118,7 @@ exports.login = (req, res, next) => {
                                 {
                                     username: user.username,
                                     userid: user._id
-                                }, process.env.JWT_SECRET_KEY)
+                                }, process.env.JWT_SECRET)
                             res.status(200).json({ message: 'You are successfully logged in', token: token })
                         }
 
@@ -186,16 +186,7 @@ exports.updloadImages = (req, res, next) => {
             console.log(err)
         })
 }
-exports.postNews = (req, res, next) => {
-    User.updateOne({ _id: "5e82bb24592a39142b9725f1" }, { $push: { news: req.body.news } })
-        .exec()
-        .then(result => {
-            res.status(200).json(result)
-        })
-        .catch(err => {
-            console.log(err)
-        })
-}
+
 exports.deleteImage = (req, res, next) => {
     cloudinary.uploader.destroy(req.body.imagelink, (result, err) => {
         if (err)
@@ -215,6 +206,20 @@ exports.updateNews = (req, res, next) => {
         .exec()
         .then(result => {
             res.status(200).json(result)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+}
+exports.postNews = (req, res, next) => {
+
+    const id = new mongoose.Types.ObjectId();
+    const date = new Date().toISOString()
+    console.log(req.body)
+    User.updateOne({ _id: "5e82bb24592a39142b9725f1" }, { $push: { news: { _id: id, title: req.body.title, content: req.body.content, date: date } } })
+        .exec()
+        .then(result => {
+            res.status(200).json({ _id: id, date: date })
         })
         .catch(err => {
             console.log(err)

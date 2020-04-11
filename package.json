@@ -3,13 +3,20 @@
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
+  "homepage": "http://www.amir-ghedira.com/",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "client-install": "npm install --prefix client",
     "start": "node server.js",
     "server": "nodemon server.js",
-    "dev": "concurrently \"npm run server\""
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
   },
   "keywords": [],
+  "env": {
+    "MONGO_PASSWORD": "amirghedirq"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -24,7 +31,7 @@
     "node-sass": "^4.13.1",
     "nodemon": "^2.0.2"
   },
-  "engines": {
-    "node": "12.14.0"
+  "devDependencies": {
+    "nodemon": "^1.12.1"
   }
 }

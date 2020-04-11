@@ -1,5 +1,6 @@
 const Project = require('../models/Project');
-
+const cloudinary = require('../middlelwares/cloudinary');
+const mongoose = require('mongoose')
 exports.getProjects = (req, res, next) => {
     Project.find()
         .exec()
@@ -14,7 +15,7 @@ exports.getProjects = (req, res, next) => {
 }
 
 exports.getProject = (req, res, next) => {
-    Project.findOne({ id: req.params.id }, {})
+    Project.findOne({ _id: req.params.id }, {})
 
         .exec()
         .then(result => {
@@ -30,11 +31,13 @@ exports.getProject = (req, res, next) => {
 }
 exports.addProject = (req, res, next) => {
     const urls = req.files.map(file => { return file.secure_url })
+    const id = new mongoose.Types.ObjectId();
+    const date = new Date().toISOString();
     const product = new Project({
-        id: req.body.id,
+        _id: id,
         name: req.body.name,
         started: req.body.started,
-        date: req.body.date,
+        date: date,
         overview: req.body.overview,
         whatlearned: req.body.whatlearned,
         technologie: req.body.technologie,
@@ -52,9 +55,10 @@ exports.addProject = (req, res, next) => {
     })
     product.save()
         .then(result => {
-            res.status(200).json({ imagesurl: urls })
+            res.status(200).json({ _id: id, date: date, imagesurl: urls })
         })
         .catch(err => {
+            console.log(err)
             res.status(400).json({ error: err })
         })
 }
@@ -62,7 +66,7 @@ exports.addProject = (req, res, next) => {
 exports.updateProject = (req, res, next) => {
     let ops = {};
     ops[req.body.propName] = req.body.value
-    Project.updateOne({ id: req.params.id }, { $set: ops })
+    Project.updateOne({ _id: req.params.id }, { $set: ops })
         .exec()
         .then(result => {
             res.status(200).json(result)
@@ -78,7 +82,7 @@ exports.deleteProject = (req, res, next) => {
         cloudinary.uploader.destroy(element.split('/')[7].split('.')[0], (err) => {
         });
     });
-    Project.deleteOne({ id: req.params.id })
+    Project.deleteOne({ _id: req.params.id })
         .exec()
         .then(result => {
             res.status(200).json(result)
@@ -90,10 +94,13 @@ exports.deleteProject = (req, res, next) => {
 }
 
 exports.postComment = (req, res, next) => {
-    Project.updateMany({ id: req.body.id }, { $push: { Comments: req.body.comment }, $set: { commentsCount: req.body.commentsCount } })
+
+    const date = new Date().toISOString()
+    const newComment = { _id: new mongoose.Types.ObjectId(), ip: req.body.comment.ip, autor: req.body.comment.autor, content: req.body.comment.content, date: date }
+    Project.updateMany({ _id: req.params.id }, { $push: { Comments: newComment }, $set: { commentsCount: req.body.commentsCount } })
         .exec()
         .then(result => {
-            res.status(200).json(result)
+            res.status(200).json({ _id: newComment._id, date: date })
         })
         .catch(err => {
             console.log(err)
@@ -101,7 +108,7 @@ exports.postComment = (req, res, next) => {
 }
 
 exports.updateDownloads = (req, res, next) => {
-    Project.updateOne({ id: req.params.id }, { $set: { downloadcount: req.body.downloadcount } })
+    Project.updateOne({ _id: req.params.id }, { $set: { downloadcount: req.body.downloadcount } })
         .exec()
         .then(result => {
             res.status(200).json(result)
@@ -112,7 +119,7 @@ exports.updateDownloads = (req, res, next) => {
 }
 
 exports.updateGitViewers = (req, res, next) => {
-    Project.updateOne({ id: req.params.id }, { $set: { gitViewers: req.body.gitviewers } })
+    Project.updateOne({ _id: req.params.id }, { $set: { gitViewers: req.body.gitviewers } })
         .exec()
         .then(result => {
             res.status(200).json(result)
@@ -123,7 +130,7 @@ exports.updateGitViewers = (req, res, next) => {
 }
 
 exports.deleteComment = (req, res, next) => {
-    Project.updateMany({ id: req.params.id }, { $set: { Comments: req.body.Comments, commentsCount: req.body.commentsCount } })
+    Project.updateMany({ _id: req.params.id }, { $set: { Comments: req.body.Comments, commentsCount: req.body.commentsCount } })
         .exec()
         .then(result => {
             res.status(200).json(result)

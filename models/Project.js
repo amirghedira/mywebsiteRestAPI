@@ -1,9 +1,8 @@
 const mongoose = require('mongoose');
 const ProjectSchema = mongoose.Schema({
-
-    id: { type: String, require: true, Unique: true },
+    _id: mongoose.Types.ObjectId,
     name: { type: String, require: true },
-    date: { type: String, require: true },
+    date: { type: Date, require: true },
     started: { type: String, require: true },
     whatlearned: { type: String, require: true },
     technologie: { type: String, require: true },
@@ -18,7 +17,13 @@ const ProjectSchema = mongoose.Schema({
     github: { type: String, require: true },
     filelink: { type: String, require: true },
     imagesurl: [],
-    Comments: []
+    Comments: [{
+        _id: mongoose.Types.ObjectId,
+        ip: String,
+        autor: String,
+        date: Date,
+        content: String
+    }]
 
 })
 

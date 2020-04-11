@@ -1,0 +1,10 @@
+{
+    "env": {
+        "MONGO_INFO": "mongodb+srv://amirghedirq:RVaeoXZ1Lrk1U9s2@cluster0-bjmuu.mongodb.net/test?retryWrites=true&w=majority",
+        "CLOUD_NAME": "hoz1jpmp7",
+        "API_KEY": "287757447646335",
+        "API_SECRET": "1jgYtcyaC2soXm0yNOw7gw3lFKU",
+        "JWT_SECRET": "secretkey"
+
+    }
+}
