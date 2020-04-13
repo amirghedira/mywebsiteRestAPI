@@ -14,6 +14,8 @@ router.get('/questions', topicController.getQuestions)
 
 router.get('/suggestions', topicController.getSuggestions)
 
+router.get('/counttopic', topicController.getnumberTopics)
+
 router.get('/:id', topicController.getTopic)
 
 router.post('/', topicController.postTopic)
@@ -27,6 +29,7 @@ router.patch('/topicstate/:id', checkAuth, topicController.editTopicState)
 router.patch('/topicpin/:id', checkAuth, topicController.pinUnpinTopic)
 
 router.delete('/:id', checkAuth, topicController.deleteTopic)
+
 
 
 module.exports = router;

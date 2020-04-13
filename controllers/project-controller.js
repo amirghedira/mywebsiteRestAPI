@@ -103,7 +103,7 @@ exports.postComment = (req, res, next) => {
             res.status(200).json({ _id: newComment._id, date: date })
         })
         .catch(err => {
-            console.log(err)
+            res.status(404).json(err)
         })
 }
 
@@ -114,7 +114,7 @@ exports.updateDownloads = (req, res, next) => {
             res.status(200).json(result)
         })
         .catch(err => {
-            console.log(err)
+            res.status(404).json(err)
         })
 }
 
@@ -125,7 +125,7 @@ exports.updateGitViewers = (req, res, next) => {
             res.status(200).json(result)
         })
         .catch(err => {
-            console.log(err)
+            res.status(404).json(err)
         })
 }
 
@@ -136,6 +136,31 @@ exports.deleteComment = (req, res, next) => {
             res.status(200).json(result)
         })
         .catch(err => {
-            console.log(err)
+            res.status(404).json(err)
+        })
+}
+
+exports.addProjectImage = (req, res, next) => {
+    Project.updateOne({ _id: req.params.id }, { $push: { imagesurl: req.file.secure_url } })
+        .exec()
+        .then(result => {
+            res.status(200).json({ imageurl: req.file.secure_url })
+        })
+        .catch(err => {
+            res.status(404).json(err)
+        })
+}
+
+exports.deleteProjectImage = (req, res, next) => {
+
+    cloudinary.uploader.destroy(req.body.imagetodelete.split('/')[7].split('.')[0], (err) => {
+    });
+    Project.updateOne({ _id: req.params.id }, { $set: { imagesurl: req.body.newimages } })
+        .exec()
+        .then(result => {
+            res.status(200).json({ result: 'done' })
+        })
+        .catch(err => {
+            res.status(404).json(err)
         })
 }
