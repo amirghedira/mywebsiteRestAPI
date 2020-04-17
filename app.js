@@ -22,8 +22,8 @@ mongosse.connect(process.env.MONGO_INFO, {
     useUnifiedTopology: true,
     useNewUrlParser: true
 })
-const publicVadidKey = process.env.PUBLIC_VAPID_KEY;
-const privateKey = process.env.PRIVATE_VAPID_KEY
+const publicVadidKey = 'BMUYV7TShfXpU5edFVCfBEO0JwC-kCujoxV6q4pp3WHipuDPF2OE4bMd4LYYsNjKdn9GMtIlxW6vMQinu9qBkUg';
+const privateKey = 'vw_UuoniFImREBrhv-eU3UewiDJg9vTfyAHnpPlVUWA'
 
 webpush.setVapidDetails('mailto:test@gmail.com', publicVadidKey, privateKey)
 app.post('/subscribe', (req, res) => {

@@ -6,6 +6,7 @@ http.listen(process.env.PORT || 5000, () => {
 
     console.log('server started')
     io.on('connection', (socket) => {
+        console.log(socket.id)
         socket.on('sendnotification', (notification) => {
             socket.broadcast.emit('sendnotification', notification)
         })
@@ -16,13 +17,11 @@ http.listen(process.env.PORT || 5000, () => {
         socket.on('sendtopic', (topic) => {
             socket.broadcast.emit('sendtopic', topic)
         })
-        socket.on('redirect', (value) => {
-            socket.broadcast.emit('redirect', value)
-        })
+
         socket.on('sendtopics', topics => {
-            console.log(topics)
             socket.broadcast.emit('sendtopics', topics)
         })
+
 
     })
 

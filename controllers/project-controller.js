@@ -20,10 +20,10 @@ exports.getProject = (req, res, next) => {
         .exec()
         .then(result => {
             console.log(result)
-            if (result.length > 0)
+            if (result)
                 res.status(200).json({ result })
             else
-                res.status(404).json({ result })
+                res.status(404).json({ message: 'Project not found' })
         })
         .catch(err => {
             res.status(500).json({ err })
