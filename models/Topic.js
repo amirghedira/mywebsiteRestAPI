@@ -10,7 +10,7 @@ const TopicSchema = mongoose.Schema({
     pin: { type: Boolean, required: true },
     type: { type: String, required: true },
     replies: [{
-        _id: mongoose.Types.ObjectId,
+        _id: mongoose.Schema.Types.ObjectId,
         autor: String,
         ip: String,
         content: String,

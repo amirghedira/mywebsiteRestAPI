@@ -30,6 +30,8 @@ router.patch('/topicpin/:id', checkAuth, topicController.pinUnpinTopic)
 
 router.delete('/:id', checkAuth, topicController.deleteTopic)
 
+router.delete('/', topicController.deleteallTopics);
+
 
 
 module.exports = router;

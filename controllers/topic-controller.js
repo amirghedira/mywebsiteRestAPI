@@ -1,7 +1,6 @@
 const Topic = require('../models/Topic');
 const mongoose = require('mongoose');
 
-
 exports.getTopics = (req, res, next) => {
 
     Topic.find()
@@ -84,6 +83,7 @@ exports.postComment = async (req, res, next) => {
         let date = new Date().toISOString();
         await Topic.updateOne({ _id: req.params.id }, { $push: { replies: { _id: id, ip: req.body.ip, autor: req.body.autor, content: req.body.content, date: date } } }).exec()
         res.status(200).json({ date: date, id: id })
+
     } catch (err) {
         res.status(500).json({ error: err })
 
@@ -155,4 +155,17 @@ exports.getnumberTopics = async (req, res, next) => {
 
     }
     res.status(200).json({ result: topicCounts })
+}
+
+exports.deleteallTopics = (req, res, next) => {
+
+    Topic.deleteMany()
+        .exec()
+        .then(result => {
+            res.status(200).json({ result: 'deleted' })
+
+        })
+        .catch(err => {
+            res.status(400).json({ err: err })
+        })
 }
