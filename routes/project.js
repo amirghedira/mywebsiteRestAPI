@@ -8,8 +8,8 @@ router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 router.get('/', ProjectController.getProjects)
 router.get('/:id', ProjectController.getProject)
-router.post('/', checkAuth, cloudinary.parser.array('projectimages', 10), ProjectController.addProject)
-router.patch('/addprojectimage/:id', checkAuth, cloudinary.parser.single('projectimage'), ProjectController.addProjectImage)
+router.post('/', checkAuth, cloudinary.parser.array('projectimages', 20), ProjectController.addProject)
+router.patch('/addprojectimages/:id', checkAuth, cloudinary.parser.array('projectimages', 20), ProjectController.addProjectImage)
 router.patch('/deleteprojectimage/:id', checkAuth, ProjectController.deleteProjectImage)
 router.patch('/deleteproject/:id/', checkAuth, ProjectController.deleteProject)
 router.patch('/:id', checkAuth, ProjectController.updateProject)

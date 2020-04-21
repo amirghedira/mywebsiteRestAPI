@@ -141,7 +141,9 @@ exports.deleteComment = (req, res, next) => {
 }
 
 exports.addProjectImage = (req, res, next) => {
-    Project.updateOne({ _id: req.params.id }, { $push: { imagesurl: req.file.secure_url } })
+
+    const urls = req.files.map(file => { return file.secure_url })
+    Project.updateOne({ _id: req.params.id }, { $push: { imagesurl: urls } })
         .exec()
         .then(result => {
             res.status(200).json({ imageurl: req.file.secure_url })
