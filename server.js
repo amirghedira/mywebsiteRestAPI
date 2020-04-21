@@ -21,6 +21,9 @@ http.listen(process.env.PORT || 5000, () => {
         socket.on('sendtopics', topics => {
             socket.broadcast.emit('sendtopics', topics)
         })
+        socket.on('sendbannedmembers', newbannedusers => {
+            socket.broadcast.emit('sendbannedmembers', newbannedusers)
+        })
 
 
     })
