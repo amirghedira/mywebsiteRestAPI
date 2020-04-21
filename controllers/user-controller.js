@@ -2,6 +2,8 @@ const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose')
+const cloudinary = require('../middlelwares/cloudinary');
+
 exports.addUser = (req, res, next) => {
     bcrypt.hash(req.body.password, 10)
         .then(hash => {
