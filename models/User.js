@@ -10,7 +10,11 @@ const UserSchema = mongoose.Schema({
     aboutme: { type: String, require: false },
     gender: { type: String, require: false },
     birthday: { type: String, require: false },
-    interest: { type: String, require: false },
+    skills: [{
+        _id: { type: mongoose.Schema.Types.ObjectId },
+        icon: { type: String },
+        description: { type: String }
+    }],
     email: { type: String, require: false },
     skype: { type: String, require: false },
     facebook: { type: String, require: false },
