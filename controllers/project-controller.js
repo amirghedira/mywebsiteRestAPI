@@ -1,5 +1,5 @@
 const Project = require('../models/Project');
-const cloudinary = require('../middlelwares/cloudinary');
+const cloudinary = require('../middlewares/cloudinary');
 const mongoose = require('mongoose')
 exports.getProjects = (req, res, next) => {
     Project.find()

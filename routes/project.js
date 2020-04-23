@@ -1,8 +1,8 @@
 const express = require('express')
 const router = express.Router();
 const bodyParser = require('body-parser');
-const cloudinary = require('../middlelwares/cloudinary')
-const checkAuth = require('../middlelwares/checkAuth')
+const cloudinary = require('../middlewares/cloudinary')
+const checkAuth = require('../middlewares/checkAuth')
 const ProjectController = require('../controllers/project-controller');
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());

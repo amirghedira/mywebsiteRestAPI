@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
-const checkAuth = require('../middlelwares/checkAuth')
+const checkAuth = require('../middlewares/checkAuth')
 const topicController = require('../controllers/topic-controller')
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
