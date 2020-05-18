@@ -149,7 +149,6 @@ exports.addProjectImage = (req, res, next) => {
             res.status(200).json({ imageurls: urls })
         })
         .catch(err => {
-            console.log(err)
             res.status(404).json(err.message)
         })
 }
