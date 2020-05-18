@@ -28,6 +28,7 @@ const privateKey = 'vw_UuoniFImREBrhv-eU3UewiDJg9vTfyAHnpPlVUWA'
 webpush.setVapidDetails('mailto:test@gmail.com', publicVadidKey, privateKey)
 app.post('/subscribe', (req, res) => {
     const subscription = req.body.subscription;
+    console.log('work')
     res.status(201).json({ result: 'done' })
     const payload = JSON.stringify({ title: 'Amir Platform', content: req.body.content })
     webpush.sendNotification(subscription, payload)

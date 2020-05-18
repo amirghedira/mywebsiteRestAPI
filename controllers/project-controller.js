@@ -146,10 +146,11 @@ exports.addProjectImage = (req, res, next) => {
     Project.updateOne({ _id: req.params.id }, { $push: { imagesurl: urls } })
         .exec()
         .then(result => {
-            res.status(200).json({ imageurl: req.file.secure_url })
+            res.status(200).json({ imageurls: urls })
         })
         .catch(err => {
-            res.status(404).json(err)
+            console.log(err)
+            res.status(404).json(err.message)
         })
 }
 

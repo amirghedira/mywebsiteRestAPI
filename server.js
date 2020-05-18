@@ -5,11 +5,11 @@ const io = require('socket.io')(http)
 http.listen(process.env.PORT || 5000, () => {
 
     io.on('connection', (socket) => {
+        console.log(socket.id)
         socket.on('sendnotification', (notification) => {
             socket.broadcast.emit('sendnotification', notification)
         })
         socket.on('sendprojects', (projects) => {
-            console.log('projects')
             socket.broadcast.emit('sendprojects', projects)
         })
         socket.on('sendtopic', (topic) => {
