@@ -1,26 +1,26 @@
 const mongoose = require('mongoose');
 const UserSchema = mongoose.Schema({
 
-    username: { type: String, require: true, Unique: true },
-    password: { type: String, require: true },
-    name: { type: String, require: true },
-    profileimage: { type: String, require: false },
-    backgroundimage: { type: String, require: false },
-    title: { type: String, require: false },
-    aboutme: { type: String, require: false },
-    gender: { type: String, require: false },
-    birthday: { type: String, require: false },
+    username: { type: String, required: true, Unique: true },
+    password: { type: String, required: true },
+    name: { type: String, required: true },
+    profileimage: { type: String, required: false },
+    backgroundimage: { type: String, required: false },
+    title: { type: String, required: false },
+    aboutme: { type: String, required: false },
+    gender: { type: String, required: false },
+    birthday: { type: String, required: false },
     skills: [{
         _id: { type: mongoose.Schema.Types.ObjectId },
         icon: { type: String },
         description: { type: String }
     }],
-    email: { type: String, require: false },
-    skype: { type: String, require: false },
-    facebook: { type: String, require: false },
-    linkedin: { type: String, require: false },
-    github: { type: String, require: false },
-    Phone: { type: String, require: false },
+    email: { type: String, required: false },
+    skype: { type: String, required: false },
+    facebook: { type: String, required: false },
+    linkedin: { type: String, required: false },
+    github: { type: String, required: false },
+    Phone: { type: String, required: false },
     news: [],
     images: []
 
