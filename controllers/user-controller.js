@@ -26,7 +26,7 @@ exports.getConnectedUser = async (req, res) => {
     try {
         const user = await User.findOne()
         const notifications = await Notification.find()
-        const projects = await projects.find()
+        const projects = await Project.find()
         const banned = await Banned.find()
         res.status(200).json({ user, notifications, projects, banned })
     } catch (error) {
