@@ -1,7 +1,7 @@
 const Topic = require('../models/Topic');
 const mongoose = require('mongoose');
 
-exports.getTopics = (req, res, next) => {
+exports.getTopics = (req, res) => {
 
     Topic.find()
         .select(' -__v')
@@ -15,7 +15,7 @@ exports.getTopics = (req, res, next) => {
         })
 }
 
-exports.getQuestions = (req, res, next) => {
+exports.getQuestions = (req, res) => {
 
     Topic.find({ type: 'questions' })
         .select(' -__v')
@@ -29,7 +29,7 @@ exports.getQuestions = (req, res, next) => {
         })
 }
 
-exports.getSuggestions = (req, res, next) => {
+exports.getSuggestions = (req, res) => {
 
     Topic.find({ type: 'suggestions' })
         .select(' -__v')
@@ -43,7 +43,7 @@ exports.getSuggestions = (req, res, next) => {
         })
 }
 
-exports.getTopic = (req, res, next) => {
+exports.getTopic = (req, res) => {
 
     Topic.findById(req.params.id)
         .exec()
@@ -59,7 +59,7 @@ exports.getTopic = (req, res, next) => {
 
 }
 
-exports.postTopic = async (req, res, next) => {
+exports.postTopic = async (req, res) => {
     const topic = new Topic({
         ip: req.body.ip,
         title: req.body.title,
@@ -80,7 +80,7 @@ exports.postTopic = async (req, res, next) => {
     }
 }
 
-exports.postComment = async (req, res, next) => {
+exports.postComment = async (req, res) => {
     try {
         let id = new mongoose.Types.ObjectId()
         let date = new Date().toISOString();
@@ -95,7 +95,7 @@ exports.postComment = async (req, res, next) => {
 }
 
 exports.deleteComment =
-    (req, res, next) => {
+    (req, res) => {
 
         Topic.updateOne({ _id: req.params.id }, { $set: { replies: req.body.newreplies } })
             .exec()
@@ -107,7 +107,7 @@ exports.deleteComment =
             })
     }
 
-exports.editTopicState = (req, res, next) => {
+exports.editTopicState = (req, res) => {
 
     Topic.updateOne({ _id: req.params.id }, { $set: { state: req.body.state } })
         .exec()
@@ -119,7 +119,7 @@ exports.editTopicState = (req, res, next) => {
         })
 }
 
-exports.pinUnpinTopic = (req, res, next) => {
+exports.pinUnpinTopic = (req, res) => {
 
     Topic.updateOne({ _id: req.params.id }, { $set: { pin: req.body.state } })
         .exec()
@@ -131,7 +131,7 @@ exports.pinUnpinTopic = (req, res, next) => {
         })
 }
 
-exports.deleteTopic = (req, res, next) => {
+exports.deleteTopic = (req, res) => {
     Topic.deleteOne({ _id: req.params.id })
         .exec()
         .then(result => {
@@ -142,7 +142,7 @@ exports.deleteTopic = (req, res, next) => {
         })
 }
 
-exports.getnumberTopics = async (req, res, next) => {
+exports.getnumberTopics = async (req, res) => {
     let topicCounts = { suggestions: null, questions: null }
     try {
         topicCounts.suggestions = await Topic.countDocuments({ type: 'suggestions' })
@@ -160,7 +160,7 @@ exports.getnumberTopics = async (req, res, next) => {
     res.status(200).json({ result: topicCounts })
 }
 
-exports.deleteallTopics = (req, res, next) => {
+exports.deleteallTopics = (req, res) => {
 
     Topic.deleteMany()
         .exec()

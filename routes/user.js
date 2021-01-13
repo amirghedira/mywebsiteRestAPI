@@ -8,6 +8,8 @@ const UserController = require('../controllers/user-controller');
 router.use(bodyparser.urlencoded({ extended: true }));
 router.use(bodyparser.json());
 
+
+router.get('/connected-user', UserController.getConnectedUser)
 router.get('/', UserController.getUser);
 router.patch('/', checkAuth, UserController.updateUser);
 router.patch('/updatepassword', checkAuth, UserController.updatePassword);

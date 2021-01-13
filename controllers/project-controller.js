@@ -1,7 +1,7 @@
 const Project = require('../models/Project');
 const cloudinary = require('../middlewares/cloudinary');
 const mongoose = require('mongoose')
-exports.getProjects = (req, res, next) => {
+exports.getProjects = (req, res) => {
     Project.find()
         .exec()
         .then(result => {
@@ -14,7 +14,7 @@ exports.getProjects = (req, res, next) => {
         })
 }
 
-exports.getProject = (req, res, next) => {
+exports.getProject = (req, res) => {
     Project.findOne({ _id: req.params.id }, {})
 
         .exec()
@@ -29,7 +29,7 @@ exports.getProject = (req, res, next) => {
             res.status(500).json({ err })
         })
 }
-exports.addProject = (req, res, next) => {
+exports.addProject = (req, res) => {
     const urls = req.files.map(file => { return file.secure_url })
     const id = new mongoose.Types.ObjectId();
     const date = new Date().toISOString();
@@ -63,7 +63,7 @@ exports.addProject = (req, res, next) => {
         })
 }
 
-exports.updateProject = (req, res, next) => {
+exports.updateProject = (req, res) => {
     let ops = {};
     ops[req.body.propName] = req.body.value
     Project.updateOne({ _id: req.params.id }, { $set: ops })
@@ -76,7 +76,7 @@ exports.updateProject = (req, res, next) => {
         })
 }
 
-exports.deleteProject = (req, res, next) => {
+exports.deleteProject = (req, res) => {
 
     req.body.files.forEach(element => {
         cloudinary.uploader.destroy(element.split('/')[7].split('.')[0], (err) => {
@@ -93,7 +93,7 @@ exports.deleteProject = (req, res, next) => {
 
 }
 
-exports.postComment = (req, res, next) => {
+exports.postComment = (req, res) => {
 
     const date = new Date().toISOString()
     const newComment = { _id: new mongoose.Types.ObjectId(), ip: req.body.comment.ip, autor: req.body.comment.autor, content: req.body.comment.content, date: date }
@@ -107,7 +107,7 @@ exports.postComment = (req, res, next) => {
         })
 }
 
-exports.updateDownloads = (req, res, next) => {
+exports.updateDownloads = (req, res) => {
     Project.updateOne({ _id: req.params.id }, { $set: { downloadcount: req.body.downloadcount } })
         .exec()
         .then(result => {
@@ -118,7 +118,7 @@ exports.updateDownloads = (req, res, next) => {
         })
 }
 
-exports.updateGitViewers = (req, res, next) => {
+exports.updateGitViewers = (req, res) => {
     Project.updateOne({ _id: req.params.id }, { $set: { gitViewers: req.body.gitviewers } })
         .exec()
         .then(result => {
@@ -129,7 +129,7 @@ exports.updateGitViewers = (req, res, next) => {
         })
 }
 
-exports.deleteComment = (req, res, next) => {
+exports.deleteComment = (req, res) => {
     Project.updateMany({ _id: req.params.id }, { $set: { Comments: req.body.Comments, commentsCount: req.body.commentsCount } })
         .exec()
         .then(result => {
@@ -140,7 +140,7 @@ exports.deleteComment = (req, res, next) => {
         })
 }
 
-exports.addProjectImage = (req, res, next) => {
+exports.addProjectImage = (req, res) => {
 
     const urls = req.files.map(file => { return file.secure_url })
     Project.updateOne({ _id: req.params.id }, { $push: { imagesurl: urls } })
@@ -153,7 +153,7 @@ exports.addProjectImage = (req, res, next) => {
         })
 }
 
-exports.deleteProjectImage = (req, res, next) => {
+exports.deleteProjectImage = (req, res) => {
 
     cloudinary.uploader.destroy(req.body.imagetodelete.split('/')[7].split('.')[0], (err) => {
     });

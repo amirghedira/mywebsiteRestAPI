@@ -3,9 +3,12 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose')
 const cloudinary = require('../middlewares/cloudinary');
+const Notification = require('../models/Notification');
+const Project = require('../models/Project');
+const Banned = require('../models/Banned');
 
 
-exports.getUser = (req, res, next) => {
+exports.getUser = (req, res) => {
     User.findOne()
         .select('-__v -password')
         .exec()
@@ -18,7 +21,21 @@ exports.getUser = (req, res, next) => {
 
 }
 
-exports.updateUser = (req, res, next) => {
+exports.getConnectedUser = async (req, res) => {
+
+    try {
+        const user = await User.findOne()
+        const notifications = await Notification.find()
+        const projects = await projects.find()
+        const banned = await Banned.find()
+        res.status(200).json({ user, notifications, projects, banned })
+    } catch (error) {
+        res.status(500).json({ error })
+    }
+
+}
+
+exports.updateUser = (req, res) => {
     let ops = {};
     for (let obj of req.body) {
         ops[obj.propName] = obj.value
@@ -34,7 +51,7 @@ exports.updateUser = (req, res, next) => {
         })
 }
 
-exports.updatePassword = (req, res, next) => {
+exports.updatePassword = (req, res) => {
     User.findOne({ username: req.body.username })
         .select('password')
         .exec()
@@ -69,7 +86,7 @@ exports.updatePassword = (req, res, next) => {
         })
 }
 
-exports.login = (req, res, next) => {
+exports.login = (req, res) => {
 
     User.findOne({ username: req.body.username })
         .exec()
@@ -110,7 +127,7 @@ exports.login = (req, res, next) => {
             })
         })
 }
-exports.updateProfileImg = (req, res, next) => {
+exports.updateProfileImg = (req, res) => {
     cloudinary.uploader.destroy(req.body.oldimagelink, (result, err) => {
         if (err)
             console.log(err)
@@ -126,7 +143,7 @@ exports.updateProfileImg = (req, res, next) => {
         })
 }
 
-exports.updateBackgroundImg = (req, res, next) => {
+exports.updateBackgroundImg = (req, res) => {
     cloudinary.uploader.destroy(req.body.oldimagelink, (result, err) => {
         console.log(result)
         if (err)
@@ -142,7 +159,7 @@ exports.updateBackgroundImg = (req, res, next) => {
         })
 }
 
-exports.updloadImages = (req, res, next) => {
+exports.updloadImages = (req, res) => {
     User.updateOne({ _id: req.user.userid }, { $push: { images: req.file.secure_url } })
         .exec()
         .then(result => {
@@ -153,7 +170,7 @@ exports.updloadImages = (req, res, next) => {
         })
 }
 
-exports.deleteImage = (req, res, next) => {
+exports.deleteImage = (req, res) => {
     cloudinary.uploader.destroy(req.body.imagelink, (result, err) => {
         if (err)
             console.log(err)
@@ -167,7 +184,7 @@ exports.deleteImage = (req, res, next) => {
             res.status(500).json({ error: err })
         })
 }
-exports.updateNews = (req, res, next) => {
+exports.updateNews = (req, res) => {
     User.updateOne({ _id: req.user.userid }, { $set: { news: req.body.news } })
         .exec()
         .then(result => {
@@ -177,7 +194,7 @@ exports.updateNews = (req, res, next) => {
             res.status(500).json({ error: err })
         })
 }
-exports.postNews = (req, res, next) => {
+exports.postNews = (req, res) => {
 
     const id = new mongoose.Types.ObjectId();
     const date = new Date().toISOString()
