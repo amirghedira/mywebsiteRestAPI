@@ -7,11 +7,11 @@ exports.searchProject = (req, res) => {
     Project.find({
         $or: [
             {
-                name: { $regex: req.query.searchTerm, $options: 'i' }
+                name: { $regex: `^[${req.query.searchTerm.split(' ').join('|')}]`, $options: 'i' }
             }
             ,
             {
-                technologie: { $regex: req.query.searchTerm, $options: 'i' }
+                technologie: { $regex: `'^[${req.query.searchTerm.split(' ').join('|')}]'`, $options: 'i' }
             }
         ]
     }).exec()
