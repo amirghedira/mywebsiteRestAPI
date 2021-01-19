@@ -1,6 +1,28 @@
 const Project = require('../models/Project');
 const cloudinary = require('../middlewares/cloudinary');
 const mongoose = require('mongoose')
+
+
+exports.searchProject = (req, res) => {
+    Project.find({
+        $or: [
+            {
+                name: { $regex: req.query.searchTerm, $options: 'i' }
+            }
+            ,
+            {
+                technologie: { $regex: req.query.searchTerm, $options: 'i' }
+            }
+        ]
+    }).exec()
+        .then(projects => {
+            res.status(200).json({ projects })
+        })
+        .catch(err => {
+            console.log(err)
+            res.status(500).json({ err })
+        })
+}
 exports.getProjects = (req, res) => {
     Project.find()
         .exec()

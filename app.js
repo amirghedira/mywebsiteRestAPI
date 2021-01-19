@@ -8,16 +8,12 @@ const topicRoutes = require('./routes/topic')
 const bannedRoutes = require('./routes/banned')
 const notificationRoutes = require('./routes/notification')
 const webpush = require('web-push')
+const cors = require('cors')
 const bodyParser = require('body-parser')
 
 app.use(bodyParser.json())
 app.use(express.static(path.join(__dirname, "client")))
-app.all("/*", function (req, res, next) {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-    next();
-});
+app.use(cors())
 mongosse.connect(process.env.MONGO_INFO, {
     useUnifiedTopology: true,
     useNewUrlParser: true

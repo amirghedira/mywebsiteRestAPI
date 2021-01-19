@@ -7,6 +7,7 @@ const ProjectController = require('../controllers/project-controller');
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 router.get('/', ProjectController.getProjects)
+router.get('/search', ProjectController.searchProject)
 router.get('/:id', ProjectController.getProject)
 router.post('/', checkAuth, cloudinary.parser.array('projectimages', 20), ProjectController.addProject)
 router.patch('/addprojectimages/:id', checkAuth, cloudinary.parser.array('projectimages', 20), ProjectController.addProjectImage)
