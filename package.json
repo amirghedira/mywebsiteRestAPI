@@ -23,8 +23,7 @@
         "node-sass": "^4.13.1",
         "nodemon": "^2.0.2",
         "socket.io": "^2.3.0",
-        "web-push": "^3.4.3",
-        "cors":"^2.8.5"
+        "web-push": "^3.4.3"
     },
     "engines": {
         "node": "12.14.0"
