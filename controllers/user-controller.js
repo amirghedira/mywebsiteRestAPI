@@ -8,6 +8,27 @@ const Project = require('../models/Project');
 const Banned = require('../models/Banned');
 
 
+exports.uploadCv = (req, res) => {
+    User.findOne()
+        .exec()
+        .then(user => {
+            if (user.cvFile) {
+                let cvFileLink = user.cvFile.split('/')[7].split('.')[0];
+                cloudinary.uploader.destroy(cvFileLink, (result, err) => {
+                    if (err)
+                        console.log(err)
+                });
+            }
+            User.updateOne({ _id: req.user.userid }, { $set: { cvFile: req.file.secure_url } })
+                .then(() => {
+                    res.status(200).json({ fileUrl: req.file.secure_url })
+                })
+
+        })
+        .catch(err => {
+            res.status(500).json({ error: err })
+        })
+}
 exports.getUser = (req, res) => {
     User.findOne()
         .select('-__v -password')
@@ -28,6 +49,7 @@ exports.getConnectedUser = async (req, res) => {
         const notifications = await Notification.find()
         const projects = await Project.find()
         const banned = await Banned.find()
+        console.log(user.cvFile)
         res.status(200).json({ user, notifications, projects, banned })
     } catch (error) {
         res.status(500).json({ error })

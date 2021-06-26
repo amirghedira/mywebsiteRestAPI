@@ -9,7 +9,7 @@ cloudinary.config({
 
 const storage = cloudinaryStorage({
     cloudinary: cloudinary,
-    allowedFormats: ['jpg', 'png', 'txt'],
+    allowedFormats: ['jpg', 'png', 'txt', 'pdf'],
     filename: function (req, file, cb) {
         cb(undefined, Date.now() + file.originalname.split('.')[0]);
     }

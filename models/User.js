@@ -21,6 +21,7 @@ const UserSchema = mongoose.Schema({
     linkedin: { type: String, required: false },
     github: { type: String, required: false },
     Phone: { type: String, required: false },
+    cvFile: { type: String },
     news: [],
     images: []
 

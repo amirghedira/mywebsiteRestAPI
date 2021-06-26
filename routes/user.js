@@ -18,6 +18,7 @@ router.patch('/updateprofileimg', checkAuth, cloudinary.parser.single('profileim
 router.patch('/updatebgimage', checkAuth, cloudinary.parser.single('bgimage'), UserController.updateBackgroundImg);
 router.patch('/deleteimage', checkAuth, UserController.deleteImage);
 router.patch('/uploadimage', checkAuth, cloudinary.parser.single('imagesofprofile'), UserController.updloadImages);
+router.patch('/upload-cv', checkAuth, cloudinary.parser.single('cvfile'), UserController.uploadCv);
 router.patch('/addskill', cloudinary.parser.single('skillicon'), checkAuth, UserController.addSkill);
 router.delete('/deleteskill/:id', checkAuth, UserController.deleteSkill)
 router.patch('/postnews', checkAuth, UserController.postNews);
