@@ -54,7 +54,7 @@ exports.deletenotifications = (req, res) => {
 }
 exports.clearNotifications = (req, res) => {
 
-    Notification.deleteMany().exec()
+    Notification.deleteMany()
         .then(result => {
             res.status(200).json({ result: "Notifications Cleared" })
 
@@ -68,7 +68,6 @@ exports.clearNotifications = (req, res) => {
 exports.markReadNotification = (req, res) => {
 
     Notification.updateOne({ _id: req.params.id }, { $set: { read: true } })
-        .exec()
         .then(result => {
             res.status(200).json({ result: 'updated' })
         })

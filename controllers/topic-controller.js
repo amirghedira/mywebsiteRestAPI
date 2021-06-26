@@ -84,7 +84,7 @@ exports.postComment = async (req, res) => {
     try {
         let id = new mongoose.Types.ObjectId()
         let date = new Date().toISOString();
-        await Topic.updateOne({ _id: req.params.id }, { $push: { replies: { _id: id, ip: req.body.ip, autor: req.body.autor, content: req.body.content, date: date } } }).exec()
+        await Topic.updateOne({ _id: req.params.id }, { $push: { replies: { _id: id, ip: req.body.ip, autor: req.body.autor, content: req.body.content, date: date } } })
         res.status(200).json({ date: date, id: id })
 
     } catch (err) {
@@ -98,7 +98,6 @@ exports.deleteComment =
     (req, res) => {
 
         Topic.updateOne({ _id: req.params.id }, { $set: { replies: req.body.newreplies } })
-            .exec()
             .then(result => {
                 res.status(200).json({ result: 'done' })
             })
@@ -110,7 +109,6 @@ exports.deleteComment =
 exports.editTopicState = (req, res) => {
 
     Topic.updateOne({ _id: req.params.id }, { $set: { state: req.body.state } })
-        .exec()
         .then(result => {
             res.status(200).json({ result: 'done' })
         })
@@ -122,7 +120,6 @@ exports.editTopicState = (req, res) => {
 exports.pinUnpinTopic = (req, res) => {
 
     Topic.updateOne({ _id: req.params.id }, { $set: { pin: req.body.state } })
-        .exec()
         .then(result => {
             res.status(200).json({ result: 'done' })
         })
@@ -133,7 +130,6 @@ exports.pinUnpinTopic = (req, res) => {
 
 exports.deleteTopic = (req, res) => {
     Topic.deleteOne({ _id: req.params.id })
-        .exec()
         .then(result => {
             res.status(200).json({ result: 'done' })
         })
@@ -163,7 +159,6 @@ exports.getnumberTopics = async (req, res) => {
 exports.deleteallTopics = (req, res) => {
 
     Topic.deleteMany()
-        .exec()
         .then(result => {
             res.status(200).json({ result: 'deleted' })
 

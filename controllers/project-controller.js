@@ -42,7 +42,6 @@ exports.getProjects = (req, res) => {
 
 exports.getProject = (req, res) => {
     Project.findOne({ _id: req.params.id }, {})
-
         .exec()
         .then(result => {
             console.log(result)
@@ -93,7 +92,6 @@ exports.updateProject = (req, res) => {
     let ops = {};
     ops[req.body.propName] = req.body.value
     Project.updateOne({ _id: req.params.id }, { $set: ops })
-        .exec()
         .then(result => {
             res.status(200).json(result)
         })
@@ -109,7 +107,6 @@ exports.deleteProject = (req, res) => {
         });
     });
     Project.deleteOne({ _id: req.params.id })
-        .exec()
         .then(result => {
             res.status(200).json(result)
         })
@@ -124,7 +121,6 @@ exports.postComment = (req, res) => {
     const date = new Date().toISOString()
     const newComment = { _id: new mongoose.Types.ObjectId(), ip: req.body.comment.ip, autor: req.body.comment.autor, content: req.body.comment.content, date: date }
     Project.updateMany({ _id: req.params.id }, { $push: { Comments: newComment }, $set: { commentsCount: req.body.commentsCount } })
-        .exec()
         .then(result => {
             res.status(200).json({ _id: newComment._id, date: date })
         })
@@ -135,7 +131,6 @@ exports.postComment = (req, res) => {
 
 exports.updateDownloads = (req, res) => {
     Project.updateOne({ _id: req.params.id }, { $set: { downloadcount: req.body.downloadcount } })
-        .exec()
         .then(result => {
             res.status(200).json(result)
         })
@@ -146,11 +141,11 @@ exports.updateDownloads = (req, res) => {
 
 exports.updateGitViewers = (req, res) => {
     Project.updateOne({ _id: req.params.id }, { $set: { gitViewers: req.body.gitviewers } })
-        .exec()
         .then(result => {
             res.status(200).json(result)
         })
         .catch(err => {
+            console.log(err)
             res.status(404).json(err)
         })
 }
@@ -170,7 +165,6 @@ exports.addProjectImage = (req, res) => {
 
     const urls = req.files.map(file => { return file.secure_url })
     Project.updateOne({ _id: req.params.id }, { $push: { imagesurl: urls } })
-        .exec()
         .then(result => {
             res.status(200).json({ imageurls: urls })
         })
@@ -184,7 +178,6 @@ exports.deleteProjectImage = (req, res) => {
     cloudinary.uploader.destroy(req.body.imagetodelete.split('/')[7].split('.')[0], (err) => {
     });
     Project.updateOne({ _id: req.params.id }, { $set: { imagesurl: req.body.newimages } })
-        .exec()
         .then(result => {
             res.status(200).json({ result: 'done' })
         })
