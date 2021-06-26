@@ -7,15 +7,16 @@ exports.searchProject = (req, res) => {
     Project.find({
         $or: [
             {
-                name: { $regex: `^[${req.query.searchTerm.split(' ').join('|')}]`, $options: 'i' }
+                name: { $regex: `(?:${req.query.searchTerm.split(' ').join('|')})`, $options: 'i' }
             }
             ,
             {
-                technologie: { $regex: `'^[${req.query.searchTerm.split(' ').join('|')}]'`, $options: 'i' }
+                technologie: { $regex: `(?:${req.query.searchTerm.split(' ').join('|')})`, $options: 'i' }
             }
         ]
     }).exec()
         .then(projects => {
+            console.log(projects.map(p => p.name))
             res.status(200).json({ projects })
         })
         .catch(err => {
