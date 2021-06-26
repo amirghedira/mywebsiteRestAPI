@@ -15,7 +15,7 @@ exports.searchProject = (req, res) => {
             }
         ]
     })
-        .sort({ date: -1 })
+        .sort({ date: 1 })
         .exec()
         .then(projects => {
             console.log(projects.map(p => p.name))
@@ -28,7 +28,7 @@ exports.searchProject = (req, res) => {
 }
 exports.getProjects = (req, res) => {
     Project.find()
-        .sort({ date: -1 })
+        .sort({ date: 1 })
         .exec()
         .then(result => {
             res.status(200).json({
