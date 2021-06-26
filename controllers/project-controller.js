@@ -14,7 +14,9 @@ exports.searchProject = (req, res) => {
                 technologie: { $regex: `(?:${req.query.searchTerm.split(' ').join('|')})`, $options: 'i' }
             }
         ]
-    }).exec()
+    })
+        .sort({ date: -1 })
+        .exec()
         .then(projects => {
             console.log(projects.map(p => p.name))
             res.status(200).json({ projects })
@@ -26,6 +28,7 @@ exports.searchProject = (req, res) => {
 }
 exports.getProjects = (req, res) => {
     Project.find()
+        .sort({ date: -1 })
         .exec()
         .then(result => {
             res.status(200).json({
