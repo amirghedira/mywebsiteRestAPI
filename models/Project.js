@@ -14,8 +14,8 @@ const ProjectSchema = mongoose.Schema({
     summary: { type: String, required: true },
     platform: { type: String, required: true },
     features: { type: String, required: true },
-    github: { type: String, required: true },
-    filelink: { type: String, required: true },
+    github: { type: String },
+    filelink: { type: String },
     imagesurl: [],
     Comments: [{
         _id: mongoose.Types.ObjectId,
