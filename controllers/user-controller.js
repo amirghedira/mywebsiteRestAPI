@@ -26,6 +26,7 @@ exports.uploadCv = (req, res) => {
 
         })
         .catch(err => {
+            console.log(err)
             res.status(500).json({ error: err })
         })
 }
@@ -49,7 +50,6 @@ exports.getConnectedUser = async (req, res) => {
         const notifications = await Notification.find()
         const projects = await Project.find()
         const banned = await Banned.find()
-        console.log(user.cvFile)
         res.status(200).json({ user, notifications, projects, banned })
     } catch (error) {
         res.status(500).json({ error })
