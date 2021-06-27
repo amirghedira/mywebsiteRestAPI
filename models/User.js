@@ -17,7 +17,7 @@ const UserSchema = mongoose.Schema({
     }],
     email: { type: String, required: false },
     skype: { type: String, required: false },
-    facebook: { type: String, required: false },
+    youtube: { type: String, required: false },
     linkedin: { type: String, required: false },
     github: { type: String, required: false },
     Phone: { type: String, required: false },
